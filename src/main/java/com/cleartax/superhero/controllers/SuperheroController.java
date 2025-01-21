@@ -6,6 +6,8 @@ import com.cleartax.superhero.services.SuperheroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class SuperheroController {
 
@@ -41,4 +43,15 @@ public class SuperheroController {
     public void deleteSuperhero(@PathVariable String id){
         superheroService.deleteSuperhero(id);
     }
+
+    @GetMapping("/{id}")
+    public Superhero getSuperheroById(@PathVariable String id){
+        return superheroService.getSuperheroById(id);
+    }
+
+    @GetMapping("/getAll")
+    public List<Superhero> getAllSuperhero(){
+        return superheroService.getAllSuperheroes();
+    }
+
 }

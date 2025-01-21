@@ -6,6 +6,8 @@ import com.cleartax.superhero.repository.SuperheroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class SuperheroService {
@@ -60,5 +62,15 @@ public class SuperheroService {
 
     public void deleteSuperhero(String id) {
         superheroRepository.deleteById(id);
+    }
+
+    public Superhero getSuperheroById(String id){
+
+        return superheroRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+
+    public List<Superhero> getAllSuperheroes(){
+        return superheroRepository.findAll();
     }
 }
