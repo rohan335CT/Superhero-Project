@@ -39,9 +39,9 @@ public class SuperheroService {
 
     public Superhero persistSuperhero(SuperheroRequestBody requestBody){
         Superhero superhero = new Superhero();
-        superhero.setName(requestBody.getName());
-        superhero.setPower(requestBody.getPower());
-        superhero.setUniverse(requestBody.getUniverse());
+        superhero.setName(requestBody.getSuperheroName());
+        superhero.setPower(requestBody.getSuperheroPower());
+        superhero.setUniverse(requestBody.getSuperheroUniverse());
 
         return superheroRepository.save(superhero);
     }

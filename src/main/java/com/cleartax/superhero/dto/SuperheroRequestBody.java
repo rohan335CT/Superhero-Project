@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SuperheroRequestBody {
-    private String name;
-    private String power;
-    private String universe;
+    private String superheroName;
+    private String superheroPower;
+    private String superheroUniverse;
 }
