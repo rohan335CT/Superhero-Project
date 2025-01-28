@@ -1,19 +1,22 @@
 package com.cleartax.superhero.controllers;
 
+import com.amazonaws.services.cloudformation.model.PhysicalResourceIdContextKeyValuePair;
 import com.cleartax.superhero.configs.SqsClientConfig;
 import com.cleartax.superhero.configs.SqsConfig;
 import com.cleartax.superhero.dto.Superhero;
 import com.cleartax.superhero.dto.SuperheroRequestBody;
+import com.cleartax.superhero.services.SuperheroConsumer;
 import com.cleartax.superhero.services.SuperheroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.VariableOperators;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.Message;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageResponse;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
+import software.amazon.awssdk.services.sqs.endpoints.internal.Value;
+import software.amazon.awssdk.services.sqs.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class SuperheroController {
@@ -25,6 +28,9 @@ public class SuperheroController {
 
     @Autowired
     private SqsClient sqsClient;
+
+    @Autowired
+    private SuperheroConsumer superheroConsumer;
 
     @Autowired
     public SuperheroController(SuperheroService superheroService, SqsClient sqsClient){
@@ -58,6 +64,16 @@ public class SuperheroController {
     @PutMapping("/{id}")
     public Superhero updateSuperhero(@PathVariable String id, @RequestBody Superhero superhero) {
         return superheroService.updateSuperhero(id, superhero);
+    }
+
+    @GetMapping("/update_superhero_async/{id}/{name}")
+    public String updateSuperheroSqs(@PathVariable String id, @PathVariable String name) {
+
+        sqsClient.sendMessage(SendMessageRequest.builder()
+        .queueUrl(sqsConfig.getQueueUrl())
+        .messageBody(id + "," + name).build());
+
+        return "Success";
     }
 
     @DeleteMapping("/{id}")

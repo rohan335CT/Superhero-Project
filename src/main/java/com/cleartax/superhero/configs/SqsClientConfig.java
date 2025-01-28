@@ -2,10 +2,13 @@ package com.cleartax.superhero.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
+
+import java.net.URI;
 
 @Configuration
 public class SqsClientConfig {
@@ -18,14 +21,23 @@ public class SqsClientConfig {
 
     @Bean
     public SqsClient sqsClient() {
+//        return SqsClient.builder()
+//                .region(Region.of(sqsConfig.getRegion()))
+//                .credentialsProvider(StaticCredentialsProvider.create(
+//                        AwsSessionCredentials.create(
+//                                sqsConfig.getAccessKey(),
+//                                sqsConfig.getSecretKey(),
+//                                sqsConfig.getSessionToken()
+//                        )
+//                ))
+//                .build();
+
         return SqsClient.builder()
+                .endpointOverride(URI.create(sqsConfig.getQueueUrl()))
                 .region(Region.of(sqsConfig.getRegion()))
                 .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsSessionCredentials.create(
-                                sqsConfig.getAccessKey(),
-                                sqsConfig.getSecretKey(),
-                                sqsConfig.getSessionToken()
-                        )
+                        AwsBasicCredentials.create(sqsConfig.getAccessKey(),
+                                sqsConfig.getSecretKey())
                 ))
                 .build();
     }

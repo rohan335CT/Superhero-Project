@@ -23,6 +23,6 @@ public class SqsConfig {
     @Value("${sqs.queue.secret-key}")
     private String secretKey;
 
-    @Value("${sqs.queue.session-token}")
-    private String sessionToken;
+//    @Value("${sqs.queue.session-token}")
+//    private String sessionToken;
 }
